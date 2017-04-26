@@ -1,4 +1,5 @@
 #include "network.h"
+#include "constants.h"
 
 #include <sstream>
 
@@ -70,6 +71,11 @@ void Network::update(const std::string& via, int distance, int lifetime)
   setVia(via);
   setDistance(distance);
   setLifetime(lifetime);  
+}
+
+bool Network::isReachable() const
+{
+  return this->via != constants::UNREACHABLE;
 }
 
 void Network::pprint() const

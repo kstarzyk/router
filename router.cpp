@@ -1,5 +1,6 @@
 #include "router.h"
 #include "socket.h"
+#include "constants.h"
 #include "timer.h"
 
 Router::Router() 
@@ -42,11 +43,11 @@ Router Router::initFromIO()
 void Router::printDistanceVector() const
 {
   for(auto it = distanceVector.begin(); it!=distanceVector.end(); ++it) {
-    if (it->second.getVia() == "unreachable" || 
-        abs(it->second.getLifetime() - lifetime) >= ROUNDSLIMITDELETE )
+    if (!it->second.isReachable() || 
+        abs(it->second.getLifetime() - lifetime) >= constants::DELETE_TIMEOUT )
       continue;
-    else if(it->second.getVia() == "unreachable" || 
-            abs(it->second.getLifetime() - lifetime) >= ROUNDSLIMITUNREACHABLE )
+    else if(!it->second.isReachable() || 
+            abs(it->second.getLifetime() - lifetime) >= constants::UNREACHABLE_TIMEOUT )
       printf("%s unreachable, received at lifetime %d\n", it->second.getCidr().c_str(), it->second.getLifetime());
     else {
       printf("%s, distance %d, %s, received at round %d\n", it->second.getCidr().c_str(), it->second.getDistance(), it->second.getVia().c_str(), it->second.getLifetime());
@@ -54,17 +55,19 @@ void Router::printDistanceVector() const
   }
 
 }
-
+/**
+ * Removes timeouted (after DELETE_TIMEOUT) networks
+ */
 void Router::clean() 
 {
   std::vector<std::string> toDelete;
   for (auto it = distanceVector.begin(); it!=distanceVector.end(); ++it) 
   {
-    if (it->second.getVia() == "unreachable" || abs(it->second.getLifetime() - lifetime) >= ROUNDSLIMITDELETE )
+    if (!it->second.isReachable() || abs(it->second.getLifetime() - lifetime) >= constants::DELETE_TIMEOUT )
       toDelete.push_back(it->second.getWebAddress());
-    else if(it->second.getVia() == "unreachable" || 
-              abs(it->second.getLifetime() - lifetime) >= ROUNDSLIMITUNREACHABLE ) 
-      it->second.setDistance(INFITITY);
+    else if (!it->second.isReachable() ||
+              abs(it->second.getLifetime() - lifetime) >= constants::UNREACHABLE_TIMEOUT ) 
+      it->second.setDistance(constants::INF);
   }
 
   for (size_t i = 0; i < toDelete.size(); i++)
@@ -87,7 +90,7 @@ void Router::propagate() {
     auto currentWebAddress = neighbours[i].getWebAddress();
     if (Socket::SendTo(sockets[i], message, addresses[i])) 
     {
-      distanceVector[currentWebAddress].update("unreachable", INFITITY, lifetime);
+      distanceVector[currentWebAddress].update(constants::UNREACHABLE, constants::INF, lifetime);
     } else {
       auto iter = distanceVector.find(currentWebAddress);
 
@@ -180,7 +183,7 @@ void Router::listen(int port)
     clean();
     while(++lifetime) 
     {
-      printf("Lifetime: %d\n", lifetime);
+      std::cout << "Lifetime: " << lifetime << "\n";
       propagate();
       auto start = Timer::now();
       while (Timer::wait(start,5*1000)) 

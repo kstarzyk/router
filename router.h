@@ -11,13 +11,9 @@
 #include <unistd.h>
 #include <errno.h>
 
-
 #include "network.h"
 #include "packet.h"
 
-const int INFITITY = 10000;
-const int ROUNDSLIMITUNREACHABLE = 3;
-const int ROUNDSLIMITDELETE = 5;
 
 class Router
 {

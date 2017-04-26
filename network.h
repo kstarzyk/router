@@ -20,6 +20,7 @@ class Network
     int getNetmask() const;
     int getDistance() const;
     int getLifetime() const;
+    bool isReachable() const;
     std::string getWebAddress() const;
     std::string getBroadcast() const;
 
