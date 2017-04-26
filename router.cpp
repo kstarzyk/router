@@ -19,18 +19,18 @@ Router Router::initFromIO()
   std::cin >> r.numberOfNetworks; 
   std::cin.ignore();
   r.sockets.resize(r.numberOfNetworks);
-  r.neighbours.resize(r.numberOfNetworks);
 
   for(size_t i = 0; i < r.numberOfNetworks; i++) 
   {
     std::string cidr, keyword;
     int distance;
     std::cin >> cidr >> keyword >> distance; 
-    Network aNetwork(cidr, distance);
-    r.neighbours[i] = aNetwork;
-    r.distanceVector[aNetwork.getWebAddress()] = aNetwork;
+    r.neighbours.emplace_back(cidr, distance);
+    std::cout << "ADDED " << cidr << " " << keyword << " " << distance << std::endl;
+    std::cout << r.neighbours[i].getWebAddress() << std::endl;
+    r.distanceVector[r.neighbours[i].getWebAddress()] = r.neighbours[i];
   }
-
+  std::cout << "INITIALIZED FROM IO " << std::endl;
   return r;
 }
 
@@ -48,9 +48,9 @@ void Router::printDistanceVector() const
       continue;
     else if(!it->second.isReachable() || 
             abs(it->second.getLifetime() - lifetime) >= constants::UNREACHABLE_TIMEOUT )
-      printf("%s unreachable, received at lifetime %d\n", it->second.getCidr().c_str(), it->second.getLifetime());
+      std::cout << it->second.getCidr() << " unreachable, received at lifetime " << it->second.getLifetime() << "\n";
     else {
-      printf("%s, distance %d, %s, received at round %d\n", it->second.getCidr().c_str(), it->second.getDistance(), it->second.getVia().c_str(), it->second.getLifetime());
+      std::cout << it->second.getCidr() << " distance, " << it->second.getDistance() << ", " << it->second.getVia() << " received at lifetime " << it->second.getLifetime() << "\n";
     }
   }
 
@@ -175,6 +175,7 @@ void Router::update(std::string senderIP, std::string ip, int netmask, int dista
 
 void Router::listen(int port) 
 {
+  std::cout << "Listen on port " << port << "\n";
   try {
     for (size_t i=0;i<sockets.size();i++)
       addresses.push_back(Socket::Init(sockets[i], neighbours[i], port));

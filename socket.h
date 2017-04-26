@@ -18,7 +18,8 @@ namespace Socket {
     bzero (&server_address, sizeof(server_address));
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(port);
-    inet_pton(AF_INET, Network::GetBroadcast(network.getIPOctets(), network.getNetmask()).c_str(), &server_address.sin_addr);
+    inet_pton(AF_INET, network.getBroadcast().c_str(), &server_address.sin_addr);
+    //inet_pton(AF_INET, Network::GetBroadcast(network.getIPOctets(), network.getNetmask()).c_str(), &server_address.sin_addr);
     int broadcastPermission = 1;
     setsockopt (sockfd, SOL_SOCKET, SO_BROADCAST, (void *)&broadcastPermission, sizeof(broadcastPermission));
 

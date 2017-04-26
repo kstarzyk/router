@@ -95,9 +95,12 @@ Network::Network() {
 /**
  *  Input: 10.0.0.1/27 5
  */
-Network::Network(std::string cidr, int distance) {
+Network::Network(std::string cidr, int distance) 
+{
   this->ip = cidr.substr(0, cidr.find('/'));
   this->netmask = stoi(cidr.substr(cidr.find('/')+1, cidr.size()));
+  if (this->netmask == 0)
+    throw new std::runtime_error("Input data incorrect (expected CIDR, not plain IP address");
   this->via = "connected directly";
   this->distance = distance;
   this->lifetime = 0;
@@ -147,22 +150,23 @@ std::string Network::GetWebAddress(std::array<int,4> octets, int netmask) {
 
 std::string Network::GetBroadcast(std::string ip, int netmask) {
   auto arr = Network::OctetsFromIP(ip);
-  return Network::GetWebAddress(arr, netmask);
+  return Network::GetBroadcast(arr, netmask);
 }
 
-std::string Network::GetBroadcast(std::array<int,4> octets, int netmask) {
+std::string Network::GetBroadcast(std::array<int,4> octets, int netmask) 
+{
   int bitsTODO = 32-netmask;
-
-  for(int i = 3; i >= 0; i--) {
-    if(bitsTODO == 0) break;
-    else if(bitsTODO >= 8) {
+  for(int i = 3; i >= 0; i--)  
+  {
+    if (bitsTODO == 0) break;
+    else if(bitsTODO >= 8) 
+    {
       octets[i] = 255;
       bitsTODO -= 8;
     }
     else {
-      for(size_t j = 0; j < (size_t) bitsTODO; j++) {
+      for(size_t j = 0; j < (size_t) bitsTODO; j++)
         octets[i] |= (1 << j);
-      }
       bitsTODO = 0;
     }
   }
