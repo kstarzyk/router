@@ -42,7 +42,9 @@ Router Router::initFromIO()
 
 void Router::printDistanceVector() const
 {
-  for (auto it = distanceVector.begin(); it!=distanceVector.end(); ++it) {
+  std::cout << " _________________\n| DISTANCE VECTOR |\n--------------------------------------\n";
+  for (auto it = distanceVector.begin(); it!=distanceVector.end(); ++it) 
+  {
     auto currentNetwork = it->second;
     if (!currentNetwork.isReachable() || 
         abs(currentNetwork.getLifetime() - lifetime) >= constants::DELETE_TIMEOUT )
@@ -54,7 +56,7 @@ void Router::printDistanceVector() const
       std::cout << currentNetwork.getCidr() << " distance " << currentNetwork.getDistance() << ", " << currentNetwork.getVia() << " received at lifetime " << currentNetwork.getLifetime() << "\n";
     }
   }
-
+  std::cout << "--------------------------------------\n\n";
 }
 /**
  * Removes timeouted (after DELETE_TIMEOUT) networks
@@ -119,6 +121,7 @@ void Router::receiveAndUpdate()
       for(size_t k = 0; k < 7; k++) str_packet += buffer[j+k];
       std::tuple<std::string, int, int> packet = Packet::decode(str_packet);
       update(senderIP, std::get<0>(packet), std::get<1>(packet), std::get<2>(packet));
+      std::cout << " GET : IP =" << std::get<0>(packet) << " NETMASK = " << std::get<1>(packet) << " DIST = " << std::get<2>(packet) << "\n";
       //printf("GET : IP = %s NETMASK = %s DIST = %s \n", std::get<0>(packet).c_str(), std::get<1>(packet).c_str(), std::get<2>(packet).c_str());
     }
   }

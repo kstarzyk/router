@@ -21,8 +21,8 @@ namespace Packet {
 
   std::string encode(const Network& network)
   {
-    return encode(network.getIP(), network.getNetmask(), network.getDistance());
-    //return encode(network.getWebAddress(), network.getNetmask(), network.getDistance());
+    //return encode(network.getIP(), network.getNetmask(), network.getDistance());
+    return encode(network.getWebAddress(), network.getNetmask(), network.getDistance());
     
   }
   std::string encode(std::string ip, int netmask, unsigned int dist)
