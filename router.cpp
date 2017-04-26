@@ -64,9 +64,9 @@ void Router::clean()
   std::vector<std::string> toDelete;
   for (auto it = distanceVector.begin(); it!=distanceVector.end(); ++it) 
   {
-    if (!it->second.isReachable() || abs(it->second.getLifetime() - lifetime) >= constants::DELETE_TIMEOUT )
+    if (!it->second.isReachable() && abs(it->second.getLifetime() - lifetime) >= constants::DELETE_TIMEOUT )
       toDelete.push_back(it->second.getWebAddress());
-    else if (!it->second.isReachable() ||
+    else if (!it->second.isReachable() &&
               abs(it->second.getLifetime() - lifetime) >= constants::UNREACHABLE_TIMEOUT ) 
       it->second.setDistance(constants::INF);
   }
@@ -112,7 +112,7 @@ void Router::receiveAndUpdate()
     auto msg = Socket::Receive(sockets[i]);
     std::string senderIP = std::get<0>(msg);
     std::string buffer = std::get<1>(msg);
-    
+    if (!senderIP.size()) continue;
     for(size_t j = 0; j < buffer.size(); j += 7) 
     {
       std::string str_packet = "";

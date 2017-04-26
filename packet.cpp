@@ -38,7 +38,10 @@ namespace Packet {
     solution[6] = dist / (256*256);
     solution[7] = dist / 256;
     solution[8] = dist % 256;
-    std::cout << "ENCODED IP: " << ip << " NETMASK: " << netmask << " DISTANCE: " << dist << " INTO " << solution << "\n"; 
+    std::cout << "ENCODED IP: " << ip << " NETMASK: " << netmask << " DISTANCE: " << dist << " INTO ";
+   
+    for (int i=0; i<9; i++) std::cout << std::stoi(solution) << " "; 
+    std::cout << "\n";
     return solution;
   }
 }
