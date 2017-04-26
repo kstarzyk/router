@@ -39,7 +39,7 @@ class Router
     void setDistance(int distance);
 
     size_t numberOfNetworks;
-    unsigned int lifetime;
+    int lifetime;
 
     std::string stringifyToPackets() const;
 
