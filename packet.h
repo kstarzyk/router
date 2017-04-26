@@ -7,7 +7,7 @@
 namespace Packet {
   std::tuple<std::string, int, int> decode(std::string packet);
   std::string encode(const Network&);
-  std::string encode(std::string ip, char netmask, unsigned int dist);
+  std::string encode(std::string ip, int netmask, unsigned int dist);
 }
 
 #endif

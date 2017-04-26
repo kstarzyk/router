@@ -21,10 +21,11 @@ namespace Packet {
 
   std::string encode(const Network& network)
   {
-    return encode(network.getWebAddress(), network.getNetmask(), network.getDistance());
+    return encode(network.getIP(), network.getNetmask(), network.getDistance());
+    //return encode(network.getWebAddress(), network.getNetmask(), network.getDistance());
     
   }
-  std::string encode(std::string ip, char netmask, unsigned int dist)
+  std::string encode(std::string ip, int netmask, unsigned int dist)
   {
     auto octets = Network::OctetsFromIP(ip);
     std::string solution(" ", 9);
@@ -40,7 +41,6 @@ namespace Packet {
     solution[8] = dist % 256;
     std::cout << "ENCODED IP: " << ip << " NETMASK: " << netmask << " DISTANCE: " << dist << " INTO ";
    
-    for (int i=0; i<9; i++) std::cout << std::stoi(solution) << " "; 
     std::cout << "\n";
     return solution;
   }

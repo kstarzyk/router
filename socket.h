@@ -51,7 +51,7 @@ namespace Socket {
     return std::make_pair(std::string(sender_ip), std::string(buffer));
   }
 
-  int SendTo(int &target, std::string msg, sockaddr_in addr)
+  int SendTo(int &target, std::string msg, sockaddr_in *addr)
   {
     return sendto(target, msg.c_str(), msg.size(), 0, (struct sockaddr*) &addr, sizeof(addr)) != (int) msg.size();
   }

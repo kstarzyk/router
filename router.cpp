@@ -89,7 +89,7 @@ void Router::propagate() {
   for (size_t i = 0; i < neighbours.size(); i++) 
   {
     auto currentWebAddress = neighbours[i].getWebAddress();
-    if (Socket::SendTo(sockets[i], message, addresses[i])) 
+    if (Socket::SendTo(sockets[i], message, &addresses[i])) 
     {
       distanceVector[currentWebAddress].update(constants::UNREACHABLE, constants::INF, lifetime);
     } else {
