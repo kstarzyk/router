@@ -29,7 +29,7 @@ void Network::setVia(const std::string& via)
     this->via = "";
   if (via == "unreachable")
     this->via = via;
-  this->via = "via + " + via;
+  this->via = "via " + via;
 }
 
 int Network::getNetmask() const

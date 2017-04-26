@@ -15,6 +15,7 @@ namespace Packet {
     dist += (int)(packet[5]) * 256*256*256;
 
     std::tuple<std::string, int, int> answer(ip, netmask, dist);
+    std::cout << "DECODED " << packet << " INTO\nIP: " << ip << " NETMASK: " << netmask << " DISTANCE: " << dist << "\n"; 
     return answer;
   }
 
@@ -37,6 +38,7 @@ namespace Packet {
     solution[6] = dist / (256*256);
     solution[7] = dist / 256;
     solution[8] = dist % 256;
+    std::cout << "ENCODED IP: " << ip << " NETMASK: " << netmask << " DISTANCE: " << dist << " INTO " << solution << "\n"; 
     return solution;
   }
 }

@@ -46,7 +46,8 @@ namespace Socket {
 
     char sender_ip[20];
     inet_ntop(AF_INET, &(sender.sin_addr), sender_ip, sizeof(sender_ip));
-
+    if (datagram_len != 0)
+      std::cout << "RECEIVED: " << std::string(buffer).c_str() << "\n";
     return std::make_pair(std::string(sender_ip), std::string(buffer));
   }
 

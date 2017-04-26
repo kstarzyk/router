@@ -42,15 +42,16 @@ Router Router::initFromIO()
 
 void Router::printDistanceVector() const
 {
-  for(auto it = distanceVector.begin(); it!=distanceVector.end(); ++it) {
-    if (!it->second.isReachable() || 
-        abs(it->second.getLifetime() - lifetime) >= constants::DELETE_TIMEOUT )
+  for (auto it = distanceVector.begin(); it!=distanceVector.end(); ++it) {
+    auto currentNetwork = it->second;
+    if (!currentNetwork.isReachable() || 
+        abs(currentNetwork.getLifetime() - lifetime) >= constants::DELETE_TIMEOUT )
       continue;
-    else if(!it->second.isReachable() || 
-            abs(it->second.getLifetime() - lifetime) >= constants::UNREACHABLE_TIMEOUT )
-      std::cout << it->second.getCidr() << " unreachable, received at lifetime " << it->second.getLifetime() << "\n";
+    else if(!currentNetwork.isReachable() || 
+            abs(currentNetwork.getLifetime() - lifetime) >= constants::UNREACHABLE_TIMEOUT )
+      std::cout << currentNetwork.getCidr() << " unreachable, received at lifetime " << currentNetwork.getLifetime() << "\n";
     else {
-      std::cout << it->second.getCidr() << " distance, " << it->second.getDistance() << ", " << it->second.getVia() << " received at lifetime " << it->second.getLifetime() << "\n";
+      std::cout << currentNetwork.getCidr() << " distance " << currentNetwork.getDistance() << ", " << currentNetwork.getVia() << " received at lifetime " << currentNetwork.getLifetime() << "\n";
     }
   }
 
